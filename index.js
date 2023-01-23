@@ -62,6 +62,31 @@ async function run() {
             res.send(result)
         });
 
+        app.put('/allemployee/role/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const option = { upsert: true }
+            const updatedEmployee = {
+                $set: {
+                    role: 'block'
+                }
+            }
+            const result = await employeeDataCollection.updateOne(filter, updatedEmployee, option);
+            res.send(result)
+        })
+        app.put('/allemployee/blockRole/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const option = { upsert: true }
+            const updatedEmployee = {
+                $set: {
+                    role: 'unblock'
+                }
+            }
+            const result = await employeeDataCollection.updateOne(filter, updatedEmployee, option);
+            res.send(result)
+        })
+
 
 
     }
