@@ -26,17 +26,43 @@ async function run() {
             res.send(result);
         })
 
+
         app.get('/allemployee', async (req, res) => {
             const query = {};
             const result = await employeeDataCollection.find(query).toArray();
             res.send(result)
         });
+        app.get('/allemployee/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await employeeDataCollection.findOne(filter);
+            res.send(result);
+
+        });
+        app.put('/allemployee/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const employee = req.body;
+            const option = { upsert: true }
+            const updatedEmployee = {
+                $set: {
+                    firstName: employee.firstName,
+                    lastName: employee.lastName,
+                    email: employee.email,
+                    phone: employee.phone,
+                }
+            }
+            const result = await employeeDataCollection.updateOne(filter, updatedEmployee, option);
+            res.send(result)
+        })
         app.delete('/allemployee/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const result = await employeeDataCollection.deleteOne(filter);
             res.send(result)
-        })
+        });
+
+
 
     }
     finally {
